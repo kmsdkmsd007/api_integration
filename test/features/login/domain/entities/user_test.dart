@@ -3,10 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('should test the entity user ', () {
-    const user = User(id: '1', name: 'kashif', email: '@gmail.com');
+    const user = User(token: 'kashif', error: '@gmail.com');
 
-    expect(user.email, '@gmail.com');
-    expect(user.name, 'kashif');
-    expect(user.id, '1');
+    expect(user.error, '@gmail.com');
+    expect(user.token, 'kashif');
   });
 }

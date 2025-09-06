@@ -1,7 +1,6 @@
 class User {
-  final String id;
-  final String name;
-  final String email;
+  final String token;
+  final String error;
 
-  const User({required this.id, required this.name, required this.email});
+  const User({required this.token, required this.error});
 }
