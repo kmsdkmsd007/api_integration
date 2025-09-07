@@ -1,27 +1,22 @@
-import 'package:dummy/features/login/data/models/user_model.dart';
-import 'package:http/http.dart' as http;
+import 'package:dartz/dartz.dart';
+import 'package:dummy/core/error/failure.dart';
+import 'package:dummy/features/login/data/datasources/auth_remote_data_source.dart';
+import 'package:dummy/features/login/domain/entities/auth_token.dart';
+import 'package:dummy/features/login/domain/repositories/auth_repository.dart';
 
-abstract class RemoteDataSource {
-  Future<UserModel> login(String email, String password);
-}
-
-class AuthRepositoryImpl implements RemoteDataSource {
-  final http.Client client;
-
-  AuthRepositoryImpl({required this.client});
-
+class AuthRepositoryImpl implements AuthRepository {
+  final AuthRemoteDataSource remoteDataSource;
+  AuthRepositoryImpl({required this.remoteDataSource});
   @override
-  Future<UserModel> login(String email, String password) async {
-    final response = await client.post(
-      Uri.parse('https://reqres.in/api/login'),
-      body: {'email': email, 'password': password},
-      headers: {'Content-Type': 'application/json'},
-    );
-
-    if (response.statusCode == 200) {
-      return UserModel.fromJson({'token': 'dummy_token', 'error': ''});
-    } else {
-      return UserModel.fromJson({'token': '', 'error': 'Login failed'});
+  Future<Either<Failure, AuthToken>> login(
+    String email,
+    String password,
+  ) async {
+    try {
+      final model = await remoteDataSource.login(email, password);
+      return Right(model);
+    } catch (e) {
+      return Left(ServerFailure());
     }
   }
 }
