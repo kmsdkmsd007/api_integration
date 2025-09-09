@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dummy/core/error/failure.dart';
+import 'package:dummy/features/login/data/models/auth_model.dart';
 import 'package:dummy/features/login/domain/entities/auth_token.dart';
 import 'package:dummy/features/login/domain/usecases/login_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,15 +18,15 @@ void main() {
   });
 
   test('should success fully login ', () async {
-    const token = AuthToken(token: '12345qwert', error: '');
+    const token = AuthTokenModel(token: 'khan@gmail.com', error: '');
     when(
-      () => mockAuthRepository.login('email', 'password'),
+      () => mockAuthRepository.login('khan@gmail.com', 'password'),
     ).thenAnswer((_) async => Right(token));
 
     final result = await loginUserCase(
-      const LoginParms(password: 'password', email: 'email'),
+      const LoginParms(password: 'password', email: 'khan@gmail.com'),
     );
     expect(result, Right(token));
-    verify(() => mockAuthRepository.login('email', 'password'));
+    verify(() => mockAuthRepository.login('khan@gmail.com', 'password'));
   });
 }

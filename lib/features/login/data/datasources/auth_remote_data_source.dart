@@ -5,7 +5,7 @@ import 'package:dummy/features/login/data/models/auth_model.dart';
 import 'package:http/http.dart' as http;
 
 abstract class AuthRemoteDataSource {
-  Future<AuthToken> login(String email, String password);
+  Future<AuthTokenModel> login(String email, String password);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -24,7 +24,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     if (response.statusCode == 200) {
       return AuthTokenModel.fromJson(jsonDecode(response.body));
     } else {
-      return throw Exception('Failed to load data');
+      throw Exception('Failed to load data');
     }
   }
 }

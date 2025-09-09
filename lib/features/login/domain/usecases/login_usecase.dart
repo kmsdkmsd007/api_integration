@@ -8,8 +8,18 @@ import 'package:equatable/equatable.dart';
 class LoginUserCase implements Usecase<AuthToken, LoginParms> {
   final AuthRepository repository;
   LoginUserCase(this.repository);
+
   @override
   Future<Either<Failure, AuthToken>> call(LoginParms parms) async {
+    // Validate email format
+    if (parms.email.isEmpty || parms.password.isEmpty) {
+      return Left(EmptyFailure(["Email and password cannot be empty"]));
+    }
+
+    final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+    if (!emailRegex.hasMatch(parms.email)) {
+      return Left(SyntextFailure(["Invalid email format"]));
+    }
     final result = await repository.login(parms.email, parms.password);
     return result;
   }
