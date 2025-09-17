@@ -1,4 +1,3 @@
-import 'package:dummy/features/login/domain/entities/auth_token.dart';
 import 'dart:convert';
 
 import 'package:dummy/features/login/data/models/auth_model.dart';
