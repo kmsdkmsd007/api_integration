@@ -34,3 +34,10 @@ class EmailChanged extends LoginEvent {
 }
 
 class LoginApi extends LoginEvent {}
+
+class LoginSuccess extends LoginEvent {
+  final String token;
+  const LoginSuccess({required this.token});
+  @override
+  List<Object> get props => [token];
+}
