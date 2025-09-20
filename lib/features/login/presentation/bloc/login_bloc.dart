@@ -1,18 +1,10 @@
-import 'dart:ffi';
-
 import 'package:bloc/bloc.dart';
 import 'package:dummy/core/error/failure.dart';
 import 'package:dummy/features/login/domain/usecases/login_usecase.dart';
 import 'package:equatable/equatable.dart';
-import 'package:http/http.dart' as http;
 
 part 'login_event.dart';
 part 'login_state.dart';
-
-const String SERVER_FAILURE_MESSAGE = 'Server Failure';
-const String CACHE_FAILURE_MESSAGE = 'cache Failure';
-const String INVALID_INPUT_FAILURE_MESSAGE =
-    'Invalid Input - The number must be a email or password.';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginUserCase loginUserCase;
@@ -31,31 +23,28 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Future _loginApi(LoginApi event, Emitter<LoginState> emit) async {
+    emit(state.copyWith(loginStatus: LoginStatus.loading));
     final failureorLogin = await loginUserCase(
       LoginParms(email: state.email, password: state.password),
     );
-    emit(state.copyWith(loginStatus: LoginStatus.loading));
     failureorLogin.fold(
-      (failure) => emit(
-        state.copyWith(
-          loginStatus: LoginStatus.failure,
-          message: state.message,
-        ),
-      ),
+      (failure) {
+        String errorMessage = 'Invalid email or password';
+        if (failure is SyntextFailure &&
+            failure != null &&
+            failure.properties.isNotEmpty) {
+          errorMessage = failure.toString();
+        }
+        emit(
+          state.copyWith(
+            loginStatus: LoginStatus.failure,
+            message: errorMessage,
+          ),
+        );
+      },
       (token) => emit(
         state.copyWith(loginStatus: LoginStatus.success, token: token.token),
       ),
     );
-  }
-
-  String _mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case ServerFailure:
-        return SERVER_FAILURE_MESSAGE;
-      case SyntextFailure:
-        return CACHE_FAILURE_MESSAGE;
-      default:
-        return 'Unexpected Error';
-    }
   }
 }

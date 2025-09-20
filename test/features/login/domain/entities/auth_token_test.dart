@@ -6,6 +6,6 @@ void main() {
     const user = AuthToken(token: 'qwerty1234', error: '');
 
     expect(user.error, '');
-    expect(user.token, '1234qwerty');
+    expect(user.token, 'qwerty1234');
   });
 }

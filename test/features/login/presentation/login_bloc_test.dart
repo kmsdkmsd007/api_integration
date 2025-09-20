@@ -80,40 +80,6 @@ void main() {
     ],
   );
 
-  blocTest<LoginBloc, LoginState>(
-    'emits [loading, failure] when LoginApi fails with invalid credentials',
-    build: () {
-      final mockLoginUserCase = MockGetLoginUser();
-      when(() => mockLoginUserCase.call(any())).thenAnswer(
-        (_) async => Left(ServerFailure(['Invalid email or password'])),
-      );
-      return LoginBloc(mockLoginUserCase);
-    },
-    act: (bloc) {
-      bloc.add(EmailChanged(email: 'wrong@example.com'));
-      bloc.add(PasswordChanged(password: 'wrongpass'));
-      bloc.add(LoginApi());
-    },
-    expect: () => [
-      LoginState(email: 'wrong@example.com', loginStatus: LoginStatus.initial),
-      LoginState(
-        email: 'wrong@example.com',
-        password: 'wrongpass',
-        loginStatus: LoginStatus.initial,
-      ),
-      LoginState(
-        email: 'wrong@example.com',
-        password: 'wrongpass',
-        loginStatus: LoginStatus.loading,
-      ),
-      LoginState(
-        email: 'wrong@example.com',
-        password: 'wrongpass',
-        loginStatus: LoginStatus.failure,
-        message: 'Invalid email or password',
-      ),
-    ],
-  );
   //
   blocTest<LoginBloc, LoginState>(
     'emits [loading, failure] when LoginApi fails with invalid credentials',
