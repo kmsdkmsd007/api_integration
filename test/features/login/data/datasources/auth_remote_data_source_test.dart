@@ -34,7 +34,7 @@ void main() {
           headers: {'Content-Type': 'application/json'},
         ),
       ).thenAnswer((_) async => http.Response('{"token": "$tToken"}', 200));
-      final result = await dataSource.login(tEmail, tPassword);
+      final result = await dataSource.loginWithEmailandPass(tEmail, tPassword);
 
       expect(result, isA<AuthTokenModel>());
       expect(result.token, tToken);
@@ -52,7 +52,7 @@ void main() {
       (_) async => http.Response(jsonEncode({'token': tToken}), 200),
     );
 
-    final result = await dataSource.login(tEmail, tPassword);
+    final result = await dataSource.loginWithEmailandPass(tEmail, tPassword);
 
     expect(result, isA<AuthTokenModel>());
     expect(result.token, tToken);
@@ -68,7 +68,7 @@ void main() {
     ).thenAnswer((_) async => http.Response('Unauthorized', 401));
 
     expect(
-      () async => await dataSource.login(tEmail, tPassword),
+      () async => await dataSource.loginWithEmailandPass(tEmail, tPassword),
       throwsException,
     );
   });

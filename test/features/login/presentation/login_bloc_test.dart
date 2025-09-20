@@ -1,19 +1,27 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:dartz/dartz.dart';
+import 'package:dummy/core/error/failure.dart';
+import 'package:dummy/features/login/domain/entities/auth_token.dart';
+import 'package:dummy/features/login/domain/usecases/login_usecase.dart';
 import 'package:dummy/features/login/presentation/bloc/login_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:http/http.dart' as http;
 
-class MockHttpClient extends Mock implements http.Client {}
+class MockGetLoginUser extends Mock implements LoginUserCase {}
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue(LoginParms(email: '', password: ''));
+  });
+  late MockGetLoginUser mockLoginUserCase;
+
   late LoginBloc loginBloc;
-  late MockHttpClient mockHttpClient;
 
   setUp(() {
-    mockHttpClient = MockHttpClient();
-    loginBloc = LoginBloc();
+    mockLoginUserCase = MockGetLoginUser();
+    loginBloc = LoginBloc(mockLoginUserCase);
   });
+
   tearDown(() {
     loginBloc.close();
   });
@@ -22,34 +30,42 @@ void main() {
     expect(loginBloc.state, LoginState());
   });
 
-  // 2. EmailChanged event
   blocTest<LoginBloc, LoginState>(
     'emits updated email when EmailChanged is added',
-    build: () => loginBloc,
+    build: () => LoginBloc(MockGetLoginUser()),
     act: (bloc) => bloc.add(EmailChanged(email: 'test@example.com')),
     expect: () => [LoginState(email: 'test@example.com')],
   );
 
-  // 3. PasswordChanged event
   blocTest<LoginBloc, LoginState>(
     'emits updated password when PasswordChanged is added',
-    build: () => loginBloc,
+    build: () => LoginBloc(MockGetLoginUser()),
     act: (bloc) => bloc.add(PasswordChanged(password: '123456')),
     expect: () => [LoginState(password: '123456')],
   );
 
-  // 4. LoginApi success
   blocTest<LoginBloc, LoginState>(
     'emits [loading, success] when LoginApi succeeds',
-    build: () => loginBloc,
-    setUp: () {
-      loginBloc.emit(
-        LoginState(email: 'eve.holt@reqres.in', password: 'cityslicka'),
-      );
+    build: () {
+      final mockLoginUserCase = MockGetLoginUser();
+      when(
+        () => mockLoginUserCase.call(any()),
+      ).thenAnswer((_) async => Right(AuthToken(token: 'abc', error: '')));
+      return LoginBloc(mockLoginUserCase);
     },
-    act: (bloc) => bloc.add(LoginApi()),
-    wait: const Duration(milliseconds: 500),
+    act: (bloc) {
+      bloc.add(EmailChanged(email: 'eve.holt@reqres.in'));
+      bloc.add(PasswordChanged(password: 'cityslicka'));
+      bloc.add(LoginApi());
+    },
     expect: () => [
+      LoginState(email: 'eve.holt@reqres.in', loginStatus: LoginStatus.initial),
+      LoginState(
+        email: 'eve.holt@reqres.in',
+        password: 'cityslicka',
+
+        loginStatus: LoginStatus.initial,
+      ),
       LoginState(
         email: 'eve.holt@reqres.in',
         password: 'cityslicka',
@@ -59,22 +75,32 @@ void main() {
         email: 'eve.holt@reqres.in',
         password: 'cityslicka',
         loginStatus: LoginStatus.success,
+        token: 'abc',
       ),
     ],
   );
 
-  // 5. LoginApi failure (wrong credentials)
   blocTest<LoginBloc, LoginState>(
     'emits [loading, failure] when LoginApi fails with invalid credentials',
-    build: () => loginBloc,
-    setUp: () {
-      loginBloc.emit(
-        LoginState(email: 'wrong@example.com', password: 'wrongpass'),
+    build: () {
+      final mockLoginUserCase = MockGetLoginUser();
+      when(() => mockLoginUserCase.call(any())).thenAnswer(
+        (_) async => Left(ServerFailure(['Invalid email or password'])),
       );
+      return LoginBloc(mockLoginUserCase);
     },
-    act: (bloc) => bloc.add(LoginApi()),
-    wait: const Duration(milliseconds: 500),
+    act: (bloc) {
+      bloc.add(EmailChanged(email: 'wrong@example.com'));
+      bloc.add(PasswordChanged(password: 'wrongpass'));
+      bloc.add(LoginApi());
+    },
     expect: () => [
+      LoginState(email: 'wrong@example.com', loginStatus: LoginStatus.initial),
+      LoginState(
+        email: 'wrong@example.com',
+        password: 'wrongpass',
+        loginStatus: LoginStatus.initial,
+      ),
       LoginState(
         email: 'wrong@example.com',
         password: 'wrongpass',
@@ -88,18 +114,39 @@ void main() {
       ),
     ],
   );
-
-  // 6. LoginApi exception (e.g., network error)
+  //
   blocTest<LoginBloc, LoginState>(
-    'emits [loading, failure] when LoginApi throws exception',
-    build: () => loginBloc,
-    setUp: () {
-      loginBloc.emit(LoginState(email: 'error@example.com', password: 'error'));
+    'emits [loading, failure] when LoginApi fails with invalid credentials',
+    build: () {
+      final mockLoginUserCase = MockGetLoginUser();
+      when(() => mockLoginUserCase.call(any())).thenAnswer(
+        (_) async => Left(ServerFailure(['Invalid email or password'])),
+      );
+      return LoginBloc(mockLoginUserCase);
     },
     act: (bloc) {
-      // Simulate exception by overriding _loginApi if needed
-      throw Exception('Network error');
+      bloc.add(EmailChanged(email: 'wrong@example.com'));
+      bloc.add(PasswordChanged(password: 'wrongpass'));
+      bloc.add(LoginApi());
     },
-    errors: () => [isA<Exception>()],
+    expect: () => [
+      LoginState(email: 'wrong@example.com', loginStatus: LoginStatus.initial),
+      LoginState(
+        email: 'wrong@example.com',
+        password: 'wrongpass',
+        loginStatus: LoginStatus.initial,
+      ),
+      LoginState(
+        email: 'wrong@example.com',
+        password: 'wrongpass',
+        loginStatus: LoginStatus.loading,
+      ),
+      LoginState(
+        email: 'wrong@example.com',
+        password: 'wrongpass',
+        loginStatus: LoginStatus.failure,
+        message: 'Invalid email or password',
+      ),
+    ],
   );
 }

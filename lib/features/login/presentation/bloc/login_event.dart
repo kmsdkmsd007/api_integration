@@ -18,9 +18,9 @@ class TogglePasswordVisibility extends LoginEvent {
   const TogglePasswordVisibility();
 }
 
-class LoginErrorEvent extends LoginEvent {
+class LoginError extends LoginEvent {
   final String error;
-  const LoginErrorEvent({required this.error});
+  const LoginError({required this.error});
   @override
   List<Object> get props => [error];
 }

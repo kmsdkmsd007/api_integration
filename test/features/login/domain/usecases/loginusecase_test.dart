@@ -20,13 +20,21 @@ void main() {
   test('should success fully login ', () async {
     const token = AuthTokenModel(token: 'khan@gmail.com', error: '');
     when(
-      () => mockAuthRepository.login('khan@gmail.com', 'password'),
+      () => mockAuthRepository.loginWithEmailandPass(
+        'khan@gmail.com',
+        'password',
+      ),
     ).thenAnswer((_) async => Right(token));
 
     final result = await loginUserCase(
       const LoginParms(password: 'password', email: 'khan@gmail.com'),
     );
     expect(result, Right(token));
-    verify(() => mockAuthRepository.login('khan@gmail.com', 'password'));
+    verify(
+      () => mockAuthRepository.loginWithEmailandPass(
+        'khan@gmail.com',
+        'password',
+      ),
+    );
   });
 }

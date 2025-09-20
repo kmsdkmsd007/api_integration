@@ -20,7 +20,10 @@ class LoginUserCase implements Usecase<AuthToken, LoginParms> {
     if (!emailRegex.hasMatch(parms.email)) {
       return Left(SyntextFailure(["Invalid email format"]));
     }
-    final result = await repository.login(parms.email, parms.password);
+    final result = await repository.loginWithEmailandPass(
+      parms.email,
+      parms.password,
+    );
     return result;
   }
 }

@@ -23,24 +23,28 @@ void main() {
 
   test('should return AuthToken on successful login', () async {
     when(
-      () => mockRemoteDataSource.login(tEmail, tPassword),
+      () => mockRemoteDataSource.loginWithEmailandPass(tEmail, tPassword),
     ).thenAnswer((_) async => tAuthToken);
 
-    final result = await repository.login(tEmail, tPassword);
+    final result = await repository.loginWithEmailandPass(tEmail, tPassword);
 
     expect(result, Right(tAuthToken));
-    verify(() => mockRemoteDataSource.login(tEmail, tPassword)).called(1);
+    verify(
+      () => mockRemoteDataSource.loginWithEmailandPass(tEmail, tPassword),
+    ).called(1);
   });
 
   test('should return ServerFailure on exception', () async {
     when(
-      () => mockRemoteDataSource.login(tEmail, tPassword),
+      () => mockRemoteDataSource.loginWithEmailandPass(tEmail, tPassword),
     ).thenThrow(Exception('Failed'));
 
-    final result = await repository.login(tEmail, tPassword);
+    final result = await repository.loginWithEmailandPass(tEmail, tPassword);
 
     expect(result, isA<Left>());
     expect((result as Left).value, isA<ServerFailure>());
-    verify(() => mockRemoteDataSource.login(tEmail, tPassword)).called(1);
+    verify(
+      () => mockRemoteDataSource.loginWithEmailandPass(tEmail, tPassword),
+    ).called(1);
   });
 }
