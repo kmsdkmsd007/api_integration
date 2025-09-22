@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dummy/core/error/failure.dart';
+import 'package:dummy/features/login/domain/repositories/auth_repository.dart';
 import 'package:dummy/features/login/domain/usecases/login_usecase.dart';
 import 'package:equatable/equatable.dart';
 
@@ -8,7 +9,9 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginUserCase loginUserCase;
-  LoginBloc(this.loginUserCase) : super(LoginState()) {
+  final AuthRepository repository;
+  LoginBloc({required this.loginUserCase, required this.repository})
+    : super(LoginState()) {
     on<EmailChanged>(_onEmailChanges);
     on<PasswordChanged>(_passwordChanged);
     on<LoginApi>(_loginApi);

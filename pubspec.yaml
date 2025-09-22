@@ -44,6 +44,7 @@ dependencies:
   dartz: ^0.10.1
   http: ^1.5.0
   bloc_test: ^10.0.0
+  get_it: ^8.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

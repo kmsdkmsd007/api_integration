@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dummy/core/error/failure.dart';
 import 'package:dummy/features/login/domain/entities/auth_token.dart';
+import 'package:dummy/features/login/domain/repositories/auth_repository.dart';
 import 'package:dummy/features/login/domain/usecases/login_usecase.dart';
 import 'package:dummy/features/login/presentation/bloc/login_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,17 +10,24 @@ import 'package:mocktail/mocktail.dart';
 
 class MockGetLoginUser extends Mock implements LoginUserCase {}
 
+class MockAuthRepository extends Mock implements AuthRepository {}
+
 void main() {
   setUpAll(() {
     registerFallbackValue(LoginParms(email: '', password: ''));
   });
   late MockGetLoginUser mockLoginUserCase;
+  late MockAuthRepository mockAuthRepository;
 
   late LoginBloc loginBloc;
 
   setUp(() {
     mockLoginUserCase = MockGetLoginUser();
-    loginBloc = LoginBloc(mockLoginUserCase);
+    mockAuthRepository = MockAuthRepository();
+    loginBloc = LoginBloc(
+      loginUserCase: mockLoginUserCase,
+      repository: mockAuthRepository,
+    );
   });
 
   tearDown(() {
@@ -32,14 +40,20 @@ void main() {
 
   blocTest<LoginBloc, LoginState>(
     'emits updated email when EmailChanged is added',
-    build: () => LoginBloc(MockGetLoginUser()),
+    build: () => LoginBloc(
+      loginUserCase: mockLoginUserCase,
+      repository: mockAuthRepository,
+    ),
     act: (bloc) => bloc.add(EmailChanged(email: 'test@example.com')),
     expect: () => [LoginState(email: 'test@example.com')],
   );
 
   blocTest<LoginBloc, LoginState>(
     'emits updated password when PasswordChanged is added',
-    build: () => LoginBloc(MockGetLoginUser()),
+    build: () => LoginBloc(
+      loginUserCase: mockLoginUserCase,
+      repository: mockAuthRepository,
+    ),
     act: (bloc) => bloc.add(PasswordChanged(password: '123456')),
     expect: () => [LoginState(password: '123456')],
   );
@@ -51,7 +65,10 @@ void main() {
       when(
         () => mockLoginUserCase.call(any()),
       ).thenAnswer((_) async => Right(AuthToken(token: 'abc', error: '')));
-      return LoginBloc(mockLoginUserCase);
+      return LoginBloc(
+        loginUserCase: mockLoginUserCase,
+        repository: mockAuthRepository,
+      );
     },
     act: (bloc) {
       bloc.add(EmailChanged(email: 'eve.holt@reqres.in'));
@@ -88,7 +105,10 @@ void main() {
       when(() => mockLoginUserCase.call(any())).thenAnswer(
         (_) async => Left(ServerFailure(['Invalid email or password'])),
       );
-      return LoginBloc(mockLoginUserCase);
+      return LoginBloc(
+        loginUserCase: mockLoginUserCase,
+        repository: mockAuthRepository,
+      );
     },
     act: (bloc) {
       bloc.add(EmailChanged(email: 'wrong@example.com'));
