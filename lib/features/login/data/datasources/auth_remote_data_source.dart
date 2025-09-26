@@ -4,7 +4,7 @@ import 'package:dummy/features/login/data/models/auth_model.dart';
 import 'package:http/http.dart' as http;
 
 abstract class AuthRemoteDataSource {
-  Future<AuthTokenModel> loginWithEmailandPass(String email, String password);
+  Future<AuthTokenModel> loginApi(String email, String password);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -13,14 +13,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<AuthTokenModel> loginWithEmailandPass(
-    String email,
-    String password,
-  ) async {
+  Future<AuthTokenModel> loginApi(String email, String password) async {
     final response = await client.post(
       Uri.parse('https://reqres.in/api/login'),
       body: {'email': email, 'password': password},
-      headers: {'Content-Type': 'application/json'},
+      headers: {'x-api-key': 'reqres-free-v1'},
     );
 
     if (response.statusCode == 200) {

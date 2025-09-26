@@ -1,38 +1,16 @@
 import 'package:dartz/dartz.dart';
 import 'package:dummy/core/error/failure.dart';
-import 'package:dummy/core/usecase/usecase.dart';
 import 'package:dummy/features/login/domain/repositories/auth_repository.dart';
 import 'package:dummy/features/login/domain/entities/auth_token.dart';
-import 'package:equatable/equatable.dart';
 
-class LoginUserCase implements Usecase<AuthToken, LoginParms> {
+class LoginUserCase {
   final AuthRepository repository;
   LoginUserCase(this.repository);
 
-  @override
-  Future<Either<Failure, AuthToken>> call(LoginParms parms) async {
-    // Validate email format
-    if (parms.email.isEmpty || parms.password.isEmpty) {
-      return Left(EmptyFailure(["Email and password cannot be empty"]));
-    }
-
-    final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
-    if (!emailRegex.hasMatch(parms.email)) {
-      return Left(SyntextFailure(["Invalid email format"]));
-    }
-    final result = await repository.loginWithEmailandPass(
-      parms.email,
-      parms.password,
-    );
-    return result;
+  Future<Either<Failure, AuthToken>> login(
+    String email,
+    String password,
+  ) async {
+    return await repository.loginApi(email, password);
   }
-}
-
-class LoginParms extends Equatable {
-  final String email;
-  final String password;
-  const LoginParms({required this.password, required this.email});
-
-  @override
-  List<Object?> get props => [email, password];
 }

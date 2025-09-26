@@ -1,7 +1,5 @@
 part of 'login_bloc.dart';
 
-enum LoginStatus { initial, loading, success, failure }
-
 class LoginState extends Equatable {
   const LoginState({
     this.email = '',
@@ -12,9 +10,10 @@ class LoginState extends Equatable {
   });
   final String email;
   final String token;
+  final LoginStatus loginStatus;
   final String password;
   final String message;
-  final LoginStatus loginStatus;
+
   LoginState copyWith({
     String? email,
     String? password,

@@ -3,9 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('should test the entity user ', () {
-    const user = AuthToken(token: 'qwerty1234', error: '');
+    const user = AuthToken(token: 'qwerty1234');
 
-    expect(user.error, '');
     expect(user.token, 'qwerty1234');
   });
 }

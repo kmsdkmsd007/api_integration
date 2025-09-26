@@ -1,6 +1,11 @@
-class AuthToken {
-  final String token;
-  final String error;
+import 'package:equatable/equatable.dart';
 
-  const AuthToken({required this.token, required this.error});
+class AuthToken extends Equatable {
+  final String token;
+
+  const AuthToken({required this.token});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [token];
 }

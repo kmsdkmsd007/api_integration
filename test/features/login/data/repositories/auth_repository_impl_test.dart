@@ -19,32 +19,28 @@ void main() {
 
   const tEmail = 'test@example.com';
   const tPassword = 'password123';
-  final tAuthToken = AuthTokenModel(token: 'token123', error: '');
+  final tAuthToken = AuthTokenModel(token: 'token123');
 
   test('should return AuthToken on successful login', () async {
     when(
-      () => mockRemoteDataSource.loginWithEmailandPass(tEmail, tPassword),
+      () => mockRemoteDataSource.loginApi(tEmail, tPassword),
     ).thenAnswer((_) async => tAuthToken);
 
-    final result = await repository.loginWithEmailandPass(tEmail, tPassword);
+    final result = await repository.loginApi(tEmail, tPassword);
 
     expect(result, Right(tAuthToken));
-    verify(
-      () => mockRemoteDataSource.loginWithEmailandPass(tEmail, tPassword),
-    ).called(1);
+    verify(() => mockRemoteDataSource.loginApi(tEmail, tPassword)).called(1);
   });
 
   test('should return ServerFailure on exception', () async {
     when(
-      () => mockRemoteDataSource.loginWithEmailandPass(tEmail, tPassword),
+      () => mockRemoteDataSource.loginApi(tEmail, tPassword),
     ).thenThrow(Exception('Failed'));
 
-    final result = await repository.loginWithEmailandPass(tEmail, tPassword);
+    final result = await repository.loginApi(tEmail, tPassword);
 
     expect(result, isA<Left>());
     expect((result as Left).value, isA<ServerFailure>());
-    verify(
-      () => mockRemoteDataSource.loginWithEmailandPass(tEmail, tPassword),
-    ).called(1);
+    verify(() => mockRemoteDataSource.loginApi(tEmail, tPassword)).called(1);
   });
 }

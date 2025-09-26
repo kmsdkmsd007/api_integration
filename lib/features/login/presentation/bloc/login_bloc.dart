@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:dummy/core/error/failure.dart';
-import 'package:dummy/features/login/domain/repositories/auth_repository.dart';
+import 'package:dummy/core/utils/enum.dart';
 import 'package:dummy/features/login/domain/usecases/login_usecase.dart';
 import 'package:equatable/equatable.dart';
 
@@ -9,9 +8,7 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginUserCase loginUserCase;
-  final AuthRepository repository;
-  LoginBloc({required this.loginUserCase, required this.repository})
-    : super(LoginState()) {
+  LoginBloc({required this.loginUserCase}) : super(LoginState()) {
     on<EmailChanged>(_onEmailChanges);
     on<PasswordChanged>(_passwordChanged);
     on<LoginApi>(_loginApi);
@@ -25,28 +22,30 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(state.copyWith(password: event.password));
   }
 
-  Future _loginApi(LoginApi event, Emitter<LoginState> emit) async {
-    emit(state.copyWith(loginStatus: LoginStatus.loading));
-    final failureorLogin = await loginUserCase(
-      LoginParms(email: state.email, password: state.password),
+  void _loginApi(LoginApi event, Emitter<LoginState> emit) async {
+    Map data = {"email": state.email, "password": state.password};
+    // Map data = {"email": "eve.holt@reqres.in", "password": "cityslicka"};
+    emit(
+      state.copyWith(
+        loginStatus: LoginStatus.loading,
+        message: 'Submitting login request...',
+      ),
     );
-    failureorLogin.fold(
-      (failure) {
-        String errorMessage = 'Invalid email or password';
-        if (failure is SyntextFailure &&
-            failure != null &&
-            failure.properties.isNotEmpty) {
-          errorMessage = failure.toString();
-        }
-        emit(
-          state.copyWith(
-            loginStatus: LoginStatus.failure,
-            message: errorMessage,
-          ),
-        );
-      },
-      (token) => emit(
-        state.copyWith(loginStatus: LoginStatus.success, token: token.token),
+
+    final result = await loginUserCase.login(state.email, state.password);
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          message: failure.toString(),
+          loginStatus: LoginStatus.error,
+        ),
+      ),
+      (AuthTokenModel) => emit(
+        state.copyWith(
+          token: AuthTokenModel.token,
+          loginStatus: LoginStatus.success,
+          message: 'Login successfully',
+        ),
       ),
     );
   }

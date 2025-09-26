@@ -22,7 +22,7 @@ void main() {
   const String tEmail = 'eve.holt@reqres.in';
   const String tPassword = 'cityslicka';
   const String tToken = 'qwert1234';
-  final tAuthTokenModel = AuthTokenModel(token: tToken, error: '');
+  final tAuthTokenModel = AuthTokenModel(token: tToken);
 
   test(
     'should perform the post request and return Auth Token on success',
@@ -31,10 +31,10 @@ void main() {
         () => mockHttpClient.post(
           Uri.parse('https://reqres.in/api/login'),
           body: {'email': tEmail, 'password': tPassword},
-          headers: {'Content-Type': 'application/json'},
+          headers: {'x-api-key': 'reqres-free-v1'},
         ),
       ).thenAnswer((_) async => http.Response('{"token": "$tToken"}', 200));
-      final result = await dataSource.loginWithEmailandPass(tEmail, tPassword);
+      final result = await dataSource.loginApi(tEmail, tPassword);
 
       expect(result, isA<AuthTokenModel>());
       expect(result.token, tToken);
@@ -52,7 +52,7 @@ void main() {
       (_) async => http.Response(jsonEncode({'token': tToken}), 200),
     );
 
-    final result = await dataSource.loginWithEmailandPass(tEmail, tPassword);
+    final result = await dataSource.loginApi(tEmail, tPassword);
 
     expect(result, isA<AuthTokenModel>());
     expect(result.token, tToken);
@@ -68,7 +68,7 @@ void main() {
     ).thenAnswer((_) async => http.Response('Unauthorized', 401));
 
     expect(
-      () async => await dataSource.loginWithEmailandPass(tEmail, tPassword),
+      () async => await dataSource.loginApi(tEmail, tPassword),
       throwsException,
     );
   });

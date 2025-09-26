@@ -35,6 +35,10 @@ class EmailChanged extends LoginEvent {
 
 class LoginApi extends LoginEvent {}
 
+class LoginLoading extends LoginEvent {}
+
+class LoginInitail extends LoginEvent {}
+
 class LoginSuccess extends LoginEvent {
   final String token;
   const LoginSuccess({required this.token});
