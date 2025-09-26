@@ -17,7 +17,7 @@ class Routes {
             return const Scaffold(
               body: Center(
                 child: Text(
-                  'Page not found',
+                  'Page not found ',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               ),
