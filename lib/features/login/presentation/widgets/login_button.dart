@@ -15,18 +15,18 @@ class LoginButtonWidget extends StatelessWidget {
       listenWhen: (previous, current) =>
           previous.loginStatus != current.loginStatus,
       listener: (context, state) {
-        if (state.loginStatus == LoginStatus.success) {
+        if (state.loginStatus == Status.success) {
           Navigator.pushNamed(context, RoutesName.home);
           FlushBarHelper.flushBarSuccessMessage(
             context,
             'Login successful: ${state.message}',
           );
-        } else if (state.loginStatus == LoginStatus.loading) {
+        } else if (state.loginStatus == Status.loading) {
           FlushBarHelper.flushBarLoadingMessage(
             context,
             "Logging in, please wait...",
           );
-        } else if (state.loginStatus == LoginStatus.error) {
+        } else if (state.loginStatus == Status.error) {
           // Optionally, navigate to another screen or perform other actions
           FlushBarHelper.flushBarErrorMessage(
             context,
@@ -48,7 +48,7 @@ class LoginButtonWidget extends StatelessWidget {
                 );
               }
             },
-            child: state.loginStatus == LoginStatus.loading
+            child: state.loginStatus == Status.loading
                 ? CircularProgressIndicator()
                 : const Text('Login'),
           );

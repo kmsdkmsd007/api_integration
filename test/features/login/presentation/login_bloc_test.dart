@@ -63,23 +63,23 @@ void main() {
       bloc.add(LoginApi());
     },
     expect: () => [
-      LoginState(email: 'eve.holt@reqres.in', loginStatus: LoginStatus.initial),
+      LoginState(email: 'eve.holt@reqres.in', loginStatus: Status.initial),
       LoginState(
         email: 'eve.holt@reqres.in',
         password: 'cityslicka',
 
-        loginStatus: LoginStatus.initial,
+        loginStatus: Status.initial,
       ),
       LoginState(
         email: 'eve.holt@reqres.in',
         password: 'cityslicka',
-        loginStatus: LoginStatus.loading,
+        loginStatus: Status.loading,
         message: "Submitting login request...",
       ),
       LoginState(
         email: 'eve.holt@reqres.in',
         password: 'cityslicka',
-        loginStatus: LoginStatus.success,
+        loginStatus: Status.success,
         token: 'abc',
         message: 'Login successfully',
       ),
@@ -103,22 +103,22 @@ void main() {
       bloc.add(LoginApi());
     },
     expect: () => [
-      LoginState(email: 'wrong@example.com', loginStatus: LoginStatus.initial),
+      LoginState(email: 'wrong@example.com', loginStatus: Status.initial),
       LoginState(
         email: 'wrong@example.com',
         password: 'wrongpass',
-        loginStatus: LoginStatus.initial,
+        loginStatus: Status.initial,
       ),
       LoginState(
         email: 'wrong@example.com',
         password: 'wrongpass',
-        loginStatus: LoginStatus.loading,
+        loginStatus: Status.loading,
         message: 'Submitting login request...',
       ),
       LoginState(
         email: 'wrong@example.com',
         password: 'wrongpass',
-        loginStatus: LoginStatus.error,
+        loginStatus: Status.error,
         message: invalidCredentialFailure(
           'invalid email or password',
         ).toString(),

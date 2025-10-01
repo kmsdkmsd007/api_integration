@@ -27,7 +27,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     // Map data = {"email": "eve.holt@reqres.in", "password": "cityslicka"};
     emit(
       state.copyWith(
-        loginStatus: LoginStatus.loading,
+        loginStatus: Status.loading,
         message: 'Submitting login request...',
       ),
     );
@@ -35,15 +35,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     final result = await loginUserCase.login(state.email, state.password);
     result.fold(
       (failure) => emit(
-        state.copyWith(
-          message: failure.toString(),
-          loginStatus: LoginStatus.error,
-        ),
+        state.copyWith(message: failure.toString(), loginStatus: Status.error),
       ),
       (AuthTokenModel) => emit(
         state.copyWith(
           token: AuthTokenModel.token,
-          loginStatus: LoginStatus.success,
+          loginStatus: Status.success,
           message: 'Login successfully',
         ),
       ),
