@@ -1,4 +1,4 @@
-import 'package:dummy/features/login/presentation/pages/login_screen.dart';
+import 'package:dummy/features/singup/presentation/pages/signup_page.dart';
 import 'package:flutter/material.dart';
 import 'injection_container.dart' as di;
 
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: LoginScreen(),
+      home: SignupPage(),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:bloc/bloc.dart';
 import 'package:dummy/core/utils/enum.dart';
 import 'package:dummy/features/singup/domain/usecases/register_usecas.dart';
@@ -8,33 +10,41 @@ part 'singup_state.dart';
 
 class SingupBloc extends Bloc<SingupEvent, SingupState> {
   final RegisterUsecas registerUsecas;
-  SingupBloc({required this.registerUsecas}) : super(SingupInitial()) {
-    on<RegisterUserEvent>(_registeUer);
+  SingupBloc({required this.registerUsecas}) : super(SingupState()) {
+    on<SignUpApi>(_registeUer);
+    on<RegisterEmailChanged>(_onEmailChanges);
+    on<RegisterPasswordChanged>(_passwordChanged);
+  }
+  void _onEmailChanges(RegisterEmailChanged event, Emitter<SingupState> emit) {
+    emit(state.copyWith(email: event.email));
   }
 
-  void _registeUer(RegisterUserEvent event, Emitter<SingupState> emit) async {
+  void _passwordChanged(
+    RegisterPasswordChanged event,
+    Emitter<SingupState> emit,
+  ) {
+    emit(state.copyWith(password: event.password));
+  }
+
+  void _registeUer(SignUpApi event, Emitter<SingupState> emit) async {
     emit(
-      SinguplodedState(
+      SingupState(
         signupStatus: Status.loading,
         message: 'Submitting register request...',
       ),
     );
     final result = await registerUsecas.registerWthEmailandPassword(
-      event.email,
-      event.password,
+      state.email,
+      state.password,
     );
     result.fold(
       (failure) => emit(
-        SinguplodedState(
-          signupStatus: Status.error,
-          message: failure.toString(),
-        ),
+        SingupState(signupStatus: Status.error, message: failure.toString()),
       ),
-      (SignUpModel) => emit(
-        SinguplodedState(
-          email: event.email,
-          password: event.password,
-          token: SignUpModel.token,
+      (signUpModel) => emit(
+        SingupState(
+          id: signUpModel.id,
+          token: signUpModel.token,
           signupStatus: Status.success,
           message: 'Register successfully',
         ),
