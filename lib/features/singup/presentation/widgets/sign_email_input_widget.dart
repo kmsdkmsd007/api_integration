@@ -3,8 +3,8 @@ import 'package:dummy/features/singup/presentation/bloc/singup_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class EmailInputWidget extends StatelessWidget {
-  const EmailInputWidget({super.key, required this.emailFoucsNode});
+class SignUpEmailInputWidget extends StatelessWidget {
+  const SignUpEmailInputWidget({super.key, required this.emailFoucsNode});
   final emailFoucsNode;
 
   @override
@@ -29,7 +29,7 @@ class EmailInputWidget extends StatelessWidget {
             return null;
           },
           onChanged: (value) {
-            context.read<LoginBloc>().add(EmailChanged(email: value));
+            context.read<SingupBloc>().add(RegisterEmailChanged(email: value));
           },
         );
       },

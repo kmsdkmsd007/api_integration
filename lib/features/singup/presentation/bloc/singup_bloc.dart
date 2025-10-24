@@ -14,9 +14,17 @@ class SingupBloc extends Bloc<SingupEvent, SingupState> {
     on<SignUpApi>(_registeUer);
     on<RegisterEmailChanged>(_onEmailChanges);
     on<RegisterPasswordChanged>(_passwordChanged);
+    on<RegisterConfirmPasswordChanged>(_confirmpassword);
   }
   void _onEmailChanges(RegisterEmailChanged event, Emitter<SingupState> emit) {
     emit(state.copyWith(email: event.email));
+  }
+
+  void _confirmpassword(
+    RegisterConfirmPasswordChanged event,
+    Emitter<SingupState> emit,
+  ) {
+    emit(state.copyWith(password: event.confirmpassword));
   }
 
   void _passwordChanged(
@@ -34,8 +42,8 @@ class SingupBloc extends Bloc<SingupEvent, SingupState> {
       ),
     );
     final result = await registerUsecas.registerWthEmailandPassword(
-      state.email,
-      state.password,
+      event.email,
+      event.password,
     );
     result.fold(
       (failure) => emit(

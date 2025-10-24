@@ -15,4 +15,6 @@ class SignUpModel extends SignUp {
   Map<String, dynamic> toJson() {
     return {'id': id, 'token': token};
   }
+
+  SignUp toEntity() => SignUp(id: id, token: token);
 }

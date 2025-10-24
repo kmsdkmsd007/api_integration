@@ -20,7 +20,8 @@ class SignUpRepositoryImpl implements SignUpRepository {
       final user = SignUpModel(id: model.id, token: model.token);
       return Right(user);
     } catch (e) {
-      return left(ServerFailure('something went wronge'));
+      print(e.toString());
+      return left(ServerFailure(e.toString()));
     }
   }
 }

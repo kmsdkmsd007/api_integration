@@ -42,7 +42,14 @@ class RegisterConfirmPasswordChanged extends SingupEvent {
   List<Object> get props => [confirmpassword];
 }
 
-class SignUpApi extends SingupEvent {}
+class SignUpApi extends SingupEvent {
+  final String email;
+  final String password;
+
+  const SignUpApi(this.email, this.password);
+  @override
+  List<Object> get props => [email, password];
+}
 
 class RegisterSuccess extends SingupEvent {
   final int id;

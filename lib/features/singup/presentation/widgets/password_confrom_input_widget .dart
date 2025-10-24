@@ -1,4 +1,3 @@
-import 'package:dummy/features/login/presentation/bloc/login_bloc.dart';
 import 'package:dummy/features/singup/presentation/bloc/singup_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +16,7 @@ class PasswordConfromInputWidget extends StatelessWidget {
         return TextFormField(
           focusNode: passwordFocusNode,
           decoration: const InputDecoration(
-            labelText: 'Password',
+            labelText: ' conform Password',
             border: OutlineInputBorder(),
           ),
           obscureText: true,
