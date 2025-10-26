@@ -30,17 +30,6 @@ class SignupRemoteDataSourceImpl implements SignupRemoteDataSource {
 
     http.StreamedResponse response = await request.send();
 
-    // final response = await client.post(
-    //   Uri. parse('https://reqres.in/api/register'),
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'x-api-key': 'reqres-api-v1',
-    //   },
-    //   body: {'email': email, 'password': password},
-    // );
-    // print(response.statusCode);
-    // print(response.body);
-
     if (response.statusCode == 200) {
       final data = jsonDecode(await response.stream.bytesToString());
 
