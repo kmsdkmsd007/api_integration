@@ -1,6 +1,8 @@
 import 'package:dummy/features/login/presentation/bloc/login_bloc.dart';
 import 'package:dummy/features/singup/presentation/bloc/singup_bloc.dart';
 import 'package:dummy/features/singup/presentation/pages/signup_page.dart';
+import 'package:dummy/features/users/presentation/cubit/users_cubit.dart';
+import 'package:dummy/features/users/presentation/pages/user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'injection_container.dart' as di;
@@ -21,6 +23,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => di.sl<SingupBloc>()),
         BlocProvider(create: (_) => di.sl<LoginBloc>()),
+        BlocProvider(create: (_) => di.sl<UsersCubit>()),
       ],
 
       child: MaterialApp(
@@ -28,7 +31,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
-        home: SignupPage(),
+        home: UserScreen(),
       ),
     );
   }

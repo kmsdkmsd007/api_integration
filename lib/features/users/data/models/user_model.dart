@@ -57,12 +57,6 @@ import 'package:dummy/features/users/domain/entities/user.dart';
 
 // ignore: must_be_immutable
 class UserDateModel extends User {
-  int? id;
-  String? email;
-  String? firstName;
-  String? lastName;
-  String? avatar;
-
   UserDateModel({
     required super.id,
     required super.email,

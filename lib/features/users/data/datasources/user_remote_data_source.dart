@@ -13,15 +13,18 @@ class RemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<List<UserDateModel>> getAllUsers() async {
     final response = await client.get(
-      Uri.parse('https://reqres.in/api/users?page=2'),
+      Uri.parse('https://reqres.in/api/users?page=1'),
       headers: {'x-api-key': 'reqres-free-v1'},
     );
 
     if (response.statusCode == 200) {
-      final List<UserDateModel> users =
-          (jsonDecode(response.body)['data'] as List)
-              .map((e) => UserDateModel.fromJson(e))
-              .toList();
+      final decodedJson = json.decode(response.body);
+      final List<dynamic> userListJson = decodedJson['data'];
+
+      final List<UserDateModel> users = userListJson
+          .map((e) => UserDateModel.fromJson(e))
+          .toList();
+      print(users);
       return users;
     } else {
       throw Exception('Failed to load data');
