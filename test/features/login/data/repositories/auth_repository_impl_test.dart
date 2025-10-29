@@ -1,3 +1,4 @@
+import 'package:dummy/features/login/data/datasources/auht_local_data_source.dart';
 import 'package:dummy/features/login/data/models/auth_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -8,13 +9,20 @@ import 'package:dartz/dartz.dart';
 
 class MockRemoteDataSource extends Mock implements AuthRemoteDataSource {}
 
+class MockLoacalDataSource extends Mock implements AuthLocalDataSource {}
+
 void main() {
   late AuthRepositoryImpl repository;
   late MockRemoteDataSource mockRemoteDataSource;
+  late MockLoacalDataSource mockLoacalDataSource;
 
   setUp(() {
     mockRemoteDataSource = MockRemoteDataSource();
-    repository = AuthRepositoryImpl(remoteDataSource: mockRemoteDataSource);
+    mockLoacalDataSource = MockLoacalDataSource();
+    repository = AuthRepositoryImpl(
+      remoteDataSource: mockRemoteDataSource,
+      localDataSource: mockLoacalDataSource,
+    );
   });
 
   const tEmail = 'test@example.com';

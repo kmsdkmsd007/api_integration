@@ -8,3 +8,21 @@ abstract class SplashState extends Equatable {
 }
 
 class SplashInitial extends SplashState {}
+
+class SplashLoading extends SplashState {}
+
+class AuthenticatedUser extends SplashState {
+  final AuthToken user;
+  const AuthenticatedUser(this.user);
+  @override
+  List<Object> get props => [user];
+}
+
+class UnauthenticaterUser extends SplashState {}
+
+class SplashError extends SplashState {
+  final String message;
+  const SplashError(this.message);
+  @override
+  List<Object> get props => [message];
+}

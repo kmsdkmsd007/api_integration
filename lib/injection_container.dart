@@ -1,3 +1,4 @@
+import 'package:dummy/features/login/data/datasources/auht_local_data_source.dart';
 import 'package:dummy/features/login/data/datasources/auth_remote_data_source.dart';
 import 'package:dummy/features/login/data/repositories/auth_repository_impl.dart';
 import 'package:dummy/features/login/domain/repositories/auth_repository.dart';
@@ -8,6 +9,7 @@ import 'package:dummy/features/singup/data/repositories/sign_up_repository_impl.
 import 'package:dummy/features/singup/domain/repositories/sign_up_repository.dart';
 import 'package:dummy/features/singup/domain/usecases/register_usecas.dart';
 import 'package:dummy/features/singup/presentation/bloc/singup_bloc.dart';
+import 'package:dummy/features/splash/presentation/cubit/splash_cubit.dart';
 import 'package:dummy/features/users/data/datasources/user_remote_data_source.dart';
 import 'package:dummy/features/users/data/repositories/user_repository_impl.dart';
 import 'package:dummy/features/users/domain/repositories/user_repository.dart';
@@ -15,6 +17,7 @@ import 'package:dummy/features/users/domain/usecases/fetch_usecas.dart';
 import 'package:dummy/features/users/presentation/cubit/users_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 final GetIt sl = GetIt.instance;
 Future<void> init() async {
@@ -22,11 +25,13 @@ Future<void> init() async {
   sl.registerFactory(() => LoginBloc(loginUserCase: sl()));
   sl.registerFactory(() => SingupBloc(registerUsecas: sl()));
   sl.registerFactory(() => UsersCubit(sl, userRepository: sl()));
+  sl.registerFactory(() => SplashCubit(sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(remoteDataSource: sl()),
+    () => AuthRepositoryImpl(remoteDataSource: sl(), localDataSource: sl()),
   );
+
   sl.registerLazySingleton<SignUpRepository>(
     () => SignUpRepositoryImpl(remoteDataSource: sl()),
   );
@@ -39,6 +44,11 @@ Future<void> init() async {
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(client: sl()),
   );
+
+  sl.registerLazySingleton<AuthLocalDataSource>(
+    () => AuhtLocalDataSourceImpl(sharedPreferences: sl()),
+  );
+
   sl.registerLazySingleton<SignupRemoteDataSource>(
     () => SignupRemoteDataSourceImpl(client: sl()),
   );
@@ -54,4 +64,6 @@ Future<void> init() async {
 
   //External
   sl.registerLazySingleton(() => http.Client());
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton(() => sharedPreferences);
 }

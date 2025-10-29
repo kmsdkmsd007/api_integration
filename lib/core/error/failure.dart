@@ -19,3 +19,11 @@ class invalidCredentialFailure extends Failure {
   @override
   List<Object?> get props => [];
 }
+
+class CacheFailure extends Failure {
+  const CacheFailure(this.message);
+  final String message;
+
+  @override
+  List<Object?> get props => [];
+}

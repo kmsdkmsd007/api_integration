@@ -1,6 +1,8 @@
 import 'package:dummy/features/login/presentation/bloc/login_bloc.dart';
 import 'package:dummy/features/singup/presentation/bloc/singup_bloc.dart';
 import 'package:dummy/features/singup/presentation/pages/signup_page.dart';
+import 'package:dummy/features/splash/presentation/cubit/splash_cubit.dart';
+import 'package:dummy/features/splash/presentation/pages/splash_screen.dart';
 import 'package:dummy/features/users/presentation/cubit/users_cubit.dart';
 import 'package:dummy/features/users/presentation/pages/user_screen.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<SingupBloc>()),
         BlocProvider(create: (_) => di.sl<LoginBloc>()),
         BlocProvider(create: (_) => di.sl<UsersCubit>()),
+        BlocProvider(create: (_) => di.sl<SplashCubit>()),
       ],
 
       child: MaterialApp(
@@ -31,7 +34,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
-        home: UserScreen(),
+        home: SplashScreen(),
       ),
     );
   }
