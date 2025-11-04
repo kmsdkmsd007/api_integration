@@ -27,3 +27,11 @@ class CacheFailure extends Failure {
   @override
   List<Object?> get props => [];
 }
+
+class NetworkFailure extends Failure {
+  const NetworkFailure(this.message);
+  final String message;
+
+  @override
+  List<Object?> get props => [];
+}

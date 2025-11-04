@@ -11,7 +11,6 @@ class SplashCubit extends Cubit<SplashState> {
   SplashCubit(this.userCase) : super(SplashInitial());
 
   Future<void> checkAuthentication() async {
-    emit(SplashLoading());
     await Future.delayed(const Duration(seconds: 2)); // show splash a bit
     try {
       final result = await userCase.getlastUser();

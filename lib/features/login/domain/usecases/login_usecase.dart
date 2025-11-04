@@ -15,11 +15,11 @@ class LoginUserCase {
     return await repository.loginApi(email, password);
   }
 
-  Future<Either<Failure, AuthTokenModel>> getlastUser() {
-    return repository.getlastUser();
-  }
-
   Future<Either<Failure, void>> clearUserCache() {
     return repository.clearUserCache();
+  }
+
+  Future<Either<Failure, AuthTokenModel>> getlastUser() {
+    return repository.getlastUser();
   }
 }

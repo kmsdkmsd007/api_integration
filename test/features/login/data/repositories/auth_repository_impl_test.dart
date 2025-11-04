@@ -5,23 +5,29 @@ import 'package:mocktail/mocktail.dart';
 import 'package:dummy/features/login/data/repositories/auth_repository_impl.dart';
 import 'package:dummy/features/login/data/datasources/auth_remote_data_source.dart';
 import 'package:dummy/core/error/failure.dart';
+import 'package:dummy/core/network/network_info.dart';
 import 'package:dartz/dartz.dart';
 
 class MockRemoteDataSource extends Mock implements AuthRemoteDataSource {}
 
 class MockLoacalDataSource extends Mock implements AuthLocalDataSource {}
 
+class MockNetworkInfo extends Mock implements NetworkInfo {}
+
 void main() {
   late AuthRepositoryImpl repository;
   late MockRemoteDataSource mockRemoteDataSource;
   late MockLoacalDataSource mockLoacalDataSource;
+  late MockNetworkInfo mockNetworkInfo;
 
   setUp(() {
     mockRemoteDataSource = MockRemoteDataSource();
     mockLoacalDataSource = MockLoacalDataSource();
+    mockNetworkInfo = MockNetworkInfo();
     repository = AuthRepositoryImpl(
       remoteDataSource: mockRemoteDataSource,
       localDataSource: mockLoacalDataSource,
+      networkInfo: mockNetworkInfo,
     );
   });
 

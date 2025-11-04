@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dummy/core/error/failure.dart';
+import 'package:dummy/core/network/network_info.dart';
 import 'package:dummy/features/login/data/datasources/auht_local_data_source.dart';
 import 'package:dummy/features/login/data/datasources/auth_remote_data_source.dart';
 import 'package:dummy/features/login/data/models/auth_model.dart';
@@ -8,9 +9,11 @@ import 'package:dummy/features/login/domain/repositories/auth_repository.dart';
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
   final AuthLocalDataSource localDataSource;
+  final NetworkInfo networkInfo;
   AuthRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
+    required this.networkInfo,
   });
 
   @override
@@ -18,26 +21,27 @@ class AuthRepositoryImpl implements AuthRepository {
     String email,
     String password,
   ) async {
-    try {
-      final model = await remoteDataSource.loginApi(email, password);
-      await localDataSource.cacheUser(model.token as AuthTokenModel);
-      final user = AuthTokenModel(token: model.token);
-      print(user.token);
-      return Right(user);
-    } catch (e) {
-      return Left(ServerFailure('some thing went wrong'));
+    return await getUserToken(() => remoteDataSource.loginApi(email, password));
+  }
+
+  Future<Either<Failure, AuthTokenModel>> getUserToken(
+    Future<AuthTokenModel> Function() getChachedToken,
+  ) async {
+    if (await networkInfo.isconnetted()) {
+      try {
+        final token = await getChachedToken();
+        await localDataSource.cacheUser(token);
+        return Right(token);
+      } catch (e) {
+        return Left(CacheFailure('No cached user'));
+      }
+    } else {
+      final token = await localDataSource.getLastUser();
+      return Right(token as AuthTokenModel);
     }
   }
 
-  Future<Either<Failure, AuthTokenModel>> getlastUser() async {
-    try {
-      final user = await localDataSource.getLastUser();
-      return Right(user as AuthTokenModel);
-    } catch (e) {
-      return Left(CacheFailure('No cached user'));
-    }
-  }
-
+  @override
   Future<Either<Failure, void>> clearUserCache() async {
     try {
       await localDataSource.clearUserCache();
@@ -45,5 +49,12 @@ class AuthRepositoryImpl implements AuthRepository {
     } catch (e) {
       return Left(CacheFailure('Failed to clear cache'));
     }
+  }
+
+  @override
+  Future<Either<Failure, AuthTokenModel>> getlastUser() {
+    return getUserToken(
+      () async => (await localDataSource.getLastUser()) as AuthTokenModel,
+    );
   }
 }

@@ -1,3 +1,5 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dummy/core/network/network_info.dart';
 import 'package:dummy/features/login/data/datasources/auht_local_data_source.dart';
 import 'package:dummy/features/login/data/datasources/auth_remote_data_source.dart';
 import 'package:dummy/features/login/data/repositories/auth_repository_impl.dart';
@@ -29,7 +31,11 @@ Future<void> init() async {
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(remoteDataSource: sl(), localDataSource: sl()),
+    () => AuthRepositoryImpl(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+      networkInfo: sl(),
+    ),
   );
 
   sl.registerLazySingleton<SignUpRepository>(
@@ -61,9 +67,11 @@ Future<void> init() async {
   sl.registerLazySingleton(() => LoginUserCase(sl()));
   sl.registerLazySingleton(() => RegisterUsecas(sl()));
   sl.registerLazySingleton(() => FetchUsecas(sl()));
+  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
 
   //External
   sl.registerLazySingleton(() => http.Client());
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);
+  sl.registerLazySingleton(() => Connectivity());
 }
