@@ -60,7 +60,7 @@ void main() {
     act: (bloc) {
       bloc.add(EmailChanged(email: 'eve.holt@reqres.in'));
       bloc.add(PasswordChanged(password: 'cityslicka'));
-      bloc.add(LoginApi());
+      bloc.add(LoginApiEvent());
     },
     expect: () => [
       LoginState(email: 'eve.holt@reqres.in', loginStatus: Status.initial),
@@ -100,7 +100,7 @@ void main() {
     act: (bloc) {
       bloc.add(EmailChanged(email: 'wrong@example.com'));
       bloc.add(PasswordChanged(password: 'wrongpass'));
-      bloc.add(LoginApi());
+      bloc.add(LoginApiEvent());
     },
     expect: () => [
       LoginState(email: 'wrong@example.com', loginStatus: Status.initial),

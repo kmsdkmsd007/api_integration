@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dummy/features/login/data/models/auth_model.dart';
 import 'package:dummy/features/login/domain/entities/auth_token.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const CACHED_USER = 'CACHED_USER';
@@ -30,7 +31,7 @@ class AuhtLocalDataSourceImpl implements AuthLocalDataSource {
       print(jsonString);
       return AuthTokenModel.fromJson(jsonMap);
     } else {
-      throw Exception('No cached user');
+      return Future.error('No cached user found');
     }
   }
 

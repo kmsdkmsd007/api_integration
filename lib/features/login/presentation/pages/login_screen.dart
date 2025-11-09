@@ -1,3 +1,6 @@
+import 'package:dummy/core/routes/routes_name.dart';
+import 'package:dummy/core/utils/enum.dart';
+import 'package:dummy/core/utils/flush_bar_helper.dart';
 import 'package:dummy/features/login/presentation/bloc/login_bloc.dart';
 import 'package:dummy/features/login/presentation/widgets/email_input_widget.dart';
 import 'package:dummy/features/login/presentation/widgets/login_button.dart';
@@ -5,6 +8,7 @@ import 'package:dummy/features/login/presentation/widgets/password_input_widget.
 import 'package:dummy/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -34,23 +38,61 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Login Screen'), backgroundColor: Colors.blue),
-      body: BlocProvider(
-        create: (_) => _loginBloc,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _fromKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                EmailInputWidget(emailFoucsNode: emailFoucsNode),
-                const SizedBox(height: 16),
-                PasswordInputWidget(passwordFocusNode: passwordFocusNode),
-                const SizedBox(height: 24),
-                LoginButtonWidget(fromKey: _fromKey),
-              ],
-            ),
-          ),
+      body: 
+          BlocConsumer<LoginBloc, LoginState>(
+          listener: (context, state) {
+          
+                if (state.loginStatus == Status.loading) {
+                  FlushBarHelper.flushBarLoadingMessage(
+                    context,
+                    "Logging in, please wait...",
+                  );
+                } else if (state.loginStatus == Status.success) {
+                  context.go(RoutesNames.home);
+                  FlushBarHelper.flushBarSuccessMessage(
+                    context,
+                    'Login successful: ${state.message}',
+                  );
+                } else if (state.loginStatus == Status.error) {
+                  FlushBarHelper.flushBarErrorMessage(
+                    context,
+                    'Login failed: ${state.message}',
+                  );
+                }
+          },
+          builder: (context, state) {
+            return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Form(
+                    key: _fromKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        EmailInputWidget(emailFoucsNode: emailFoucsNode),
+                        const SizedBox(height: 16),
+                        PasswordInputWidget(passwordFocusNode: passwordFocusNode),
+                        const SizedBox(height: 24),
+                        // LoginButtonWidget(fromKey: _fromKey),
+                          ElevatedButton(
+                    onPressed: () {
+                      if (fromKey.currentState!.validate()) {
+                        context.read<LoginBloc>().add(LoginApiEvent(email: ));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Please fill in all fields')),
+                        );
+                      }
+                    },
+                    child: state.loginStatus == Status.loading
+                        ? CircularProgressIndicator()
+                        : const Text('Login'),
+                  )
+            
+                      ],
+                    ),
+                  ),
+                );
+          },
         ),
       ),
     );

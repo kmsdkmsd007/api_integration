@@ -1,3 +1,4 @@
+import 'package:dummy/core/routes/app_routes.dart';
 import 'package:dummy/features/login/presentation/bloc/login_bloc.dart';
 import 'package:dummy/features/singup/presentation/bloc/singup_bloc.dart';
 import 'package:dummy/features/singup/presentation/pages/signup_page.dart';
@@ -25,16 +26,15 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => di.sl<SingupBloc>()),
         BlocProvider(create: (_) => di.sl<LoginBloc>()),
-        BlocProvider(create: (_) => di.sl<UsersCubit>()),
-        BlocProvider(create: (_) => di.sl<SplashCubit>()),
+        BlocProvider(create: (_) => di.sl<UsersCubit>()..fetchAllUsers()),
+        BlocProvider(
+          create: (_) => di.sl<SplashCubit>()..checkAuthentication(),
+        ),
       ],
 
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        ),
-        home: SplashScreen(),
+      child: MaterialApp.router(
+        routerConfig: AppRoutes.router,
+        theme: ThemeData(primarySwatch: Colors.blue),
       ),
     );
   }

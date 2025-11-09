@@ -27,7 +27,7 @@ Future<void> init() async {
   sl.registerFactory(() => LoginBloc(loginUserCase: sl()));
   sl.registerFactory(() => SingupBloc(registerUsecas: sl()));
   sl.registerFactory(() => UsersCubit(sl, userRepository: sl()));
-  sl.registerFactory(() => SplashCubit(sl()));
+  sl.registerFactory(() => SplashCubit(sl(), sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(
