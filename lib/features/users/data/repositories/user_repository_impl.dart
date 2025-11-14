@@ -1,8 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:dummy/core/error/failure.dart';
+import 'package:dummy/features/login/data/datasources/auht_local_data_source.dart';
 import 'package:dummy/features/users/data/datasources/user_remote_data_source.dart';
 import 'package:dummy/features/users/domain/entities/user.dart';
 import 'package:dummy/features/users/domain/repositories/user_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepositoryImpl implements UserRepository {
   final UserRemoteDataSource remoteDataSource;
@@ -27,6 +29,16 @@ class UserRepositoryImpl implements UserRepository {
     } catch (e) {
       print(e.toString());
       return left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> clearUserCache() async {
+    try {
+      await remoteDataSource.clearUserCache();
+      return const Right(null);
+    } catch (e) {
+      return Left(CacheFailure('Failed to clear cache'));
     }
   }
 }

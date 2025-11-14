@@ -22,7 +22,11 @@ void main() {
   const String tEmail = 'eve.holt@reqres.in';
   const String tPassword = 'cityslicka';
   const String tToken = 'qwert1234';
-  final tAuthTokenModel = AuthTokenModel(token: tToken);
+  final tAuthTokenModel = AuthTokenModel(
+    token: tToken,
+    email: tEmail,
+    password: tPassword,
+  );
 
   test(
     'should perform the post request and return Auth Token on success',

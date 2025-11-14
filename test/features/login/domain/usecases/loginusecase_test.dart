@@ -18,7 +18,11 @@ void main() {
   });
 
   test('should success fully login ', () async {
-    const token = AuthTokenModel(token: 'khan@gmail.com');
+    const token = AuthTokenModel(
+      token: 'khan@gmail.com',
+      password: '123456u',
+      email: '',
+    );
     when(
       () => mockAuthRepository.loginApi('khan@gmail.com', 'password'),
     ).thenAnswer((_) async => Right(token));

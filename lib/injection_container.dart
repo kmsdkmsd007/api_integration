@@ -60,7 +60,7 @@ Future<void> init() async {
   );
 
   sl.registerLazySingleton<UserRemoteDataSource>(
-    () => RemoteDataSourceImpl(client: sl()),
+    () => RemoteDataSourceImpl(client: sl(), sharedPreferences: sl()),
   );
 
   // user case

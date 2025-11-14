@@ -20,6 +20,8 @@ class AuthenticatedUser extends SplashState {
 
 class UnauthenticaterUser extends SplashState {}
 
+class LogoutUser extends SplashState {}
+
 class SplashError extends SplashState {
   final String message;
   const SplashError(this.message);

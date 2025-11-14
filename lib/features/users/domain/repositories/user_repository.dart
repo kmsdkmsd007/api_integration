@@ -4,4 +4,5 @@ import 'package:dummy/features/users/domain/entities/user.dart';
 
 abstract class UserRepository {
   Future<Either<Failure, List<User>>> fetchUser();
+  Future<Either<Failure, void>> clearUserCache();
 }

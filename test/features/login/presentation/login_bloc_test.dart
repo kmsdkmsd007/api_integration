@@ -52,15 +52,15 @@ void main() {
       final mockLoginUserCase = MockGetLoginUser();
       final tEmail = "eve.holt@reqres.in";
       final tPassword = "cityslicka";
-      when(
-        () => mockLoginUserCase.login(tEmail, tPassword),
-      ).thenAnswer((_) async => Right(AuthToken(token: 'abc')));
+      when(() => mockLoginUserCase.login(tEmail, tPassword)).thenAnswer(
+        (_) async => Right(AuthToken(token: 'abc', password: '', email: '')),
+      );
       return LoginBloc(loginUserCase: mockLoginUserCase);
     },
     act: (bloc) {
       bloc.add(EmailChanged(email: 'eve.holt@reqres.in'));
       bloc.add(PasswordChanged(password: 'cityslicka'));
-      bloc.add(LoginApiEvent());
+      bloc.add(LoginApiEvent(email: '', password: ''));
     },
     expect: () => [
       LoginState(email: 'eve.holt@reqres.in', loginStatus: Status.initial),
@@ -100,7 +100,7 @@ void main() {
     act: (bloc) {
       bloc.add(EmailChanged(email: 'wrong@example.com'));
       bloc.add(PasswordChanged(password: 'wrongpass'));
-      bloc.add(LoginApiEvent());
+      bloc.add(LoginApiEvent(email: '', password: ''));
     },
     expect: () => [
       LoginState(email: 'wrong@example.com', loginStatus: Status.initial),

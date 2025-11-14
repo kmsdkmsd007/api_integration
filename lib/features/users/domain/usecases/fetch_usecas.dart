@@ -10,4 +10,9 @@ class FetchUsecas implements UserRepository {
   Future<Either<Failure, List<User>>> fetchUser() async {
     return repository.fetchUser();
   }
+
+  @override
+  Future<Either<Failure, void>> clearUserCache() {
+    return repository.clearUserCache();
+  }
 }

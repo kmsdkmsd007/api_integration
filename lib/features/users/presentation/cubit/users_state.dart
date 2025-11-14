@@ -23,3 +23,7 @@ class UserError extends UsersState {
   @override
   List<Object> get props => [message];
 }
+
+class UserloggedOut extends UsersState {
+  const UserloggedOut();
+}

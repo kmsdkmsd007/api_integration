@@ -8,7 +8,17 @@ class UserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("User Screen ")),
+      backgroundColor: const Color.fromARGB(255, 184, 255, 255),
+      appBar: AppBar(
+        backgroundColor: Colors.teal,
+        title: Text("User Screen "),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () => context.read<UsersCubit>().clearUserData(),
+          ),
+        ],
+      ),
       body: BlocBuilder<UsersCubit, UsersState>(
         builder: (context, state) {
           if (state is UsersLoading) {
@@ -37,7 +47,7 @@ class UserScreen extends StatelessWidget {
           }
           return Center(
             child: ElevatedButton(
-              onPressed: () => context.read<UsersCubit>().fetchAllUsers(),
+              onPressed: () => context.read<UsersCubit>().clearUserData(),
               child: const Text('Load Users'),
             ),
           );

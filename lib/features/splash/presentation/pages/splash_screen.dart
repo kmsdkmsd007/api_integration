@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dummy/features/splash/presentation/cubit/splash_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,9 +16,11 @@ class SplashScreen extends StatelessWidget {
           context.go('/home'); // using go_router
         } else if (state is UnauthenticaterUser) {
           context.go('/login');
+        } else if (state is LogoutUser) {
+          context.go('/login');
         }
       },
-      child: Scaffold(body: Center(child: CircularProgressIndicator())),
+      child: Scaffold(body: Center(child: Text('Splash Screen'))),
     );
   }
 }

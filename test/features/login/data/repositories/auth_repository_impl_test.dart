@@ -33,7 +33,11 @@ void main() {
 
   const tEmail = 'test@example.com';
   const tPassword = 'password123';
-  final tAuthToken = AuthTokenModel(token: 'token123');
+  final tAuthToken = AuthTokenModel(
+    token: 'token123',
+    password: tPassword,
+    email: tEmail,
+  );
 
   test('should return AuthToken on successful login', () async {
     when(

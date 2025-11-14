@@ -1,4 +1,6 @@
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
+import 'package:dummy/core/error/failure.dart';
 import 'package:dummy/features/users/domain/entities/user.dart';
 import 'package:dummy/features/users/domain/repositories/user_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -16,5 +18,12 @@ class UsersCubit extends Cubit<UsersState> {
     result.fold((failure) {
       emit(UserError(failure.toString()));
     }, (users) => emit(UsersLoaded(users)));
+  }
+
+  Future<void> clearUserData() async {
+    final userLogout = await userRepository.clearUserCache();
+    userLogout.fold((failure) {
+      emit(UserError(failure.toString()));
+    }, (_) => emit(const UserloggedOut()));
   }
 }
