@@ -1,9 +1,5 @@
 import 'package:dummy/features/singup/presentation/bloc/singup_bloc.dart';
-import 'package:dummy/features/singup/presentation/widgets/password_confrom_input_widget%20.dart';
-import 'package:dummy/features/singup/presentation/widgets/sign_email_input_widget.dart';
-import 'package:dummy/features/singup/presentation/widgets/sign_password_input_widget.dart';
-import 'package:dummy/features/singup/presentation/widgets/singn_up_button.dart';
-import 'package:dummy/injection_container.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
