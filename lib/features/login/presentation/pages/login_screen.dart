@@ -1,6 +1,7 @@
 import 'package:dummy/core/routes/routes_name.dart';
 import 'package:dummy/core/utils/enum.dart';
 import 'package:dummy/core/utils/flush_bar_helper.dart';
+import 'package:dummy/core/utils/routes_name.dart';
 import 'package:dummy/features/login/presentation/bloc/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,8 +15,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  //TODO: controllers and form key
-
   TextEditingController emailController = TextEditingController(
     text: 'eve.holt@reqres.in',
   );
@@ -47,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
               "Logging in, please wait...",
             );
           } else if (state.loginStatus == Status.success) {
-            context.go(RoutesNames.home);
+            context.go(RoutesName.home);
             FlushBarHelper.flushBarSuccessMessage(
               context,
               'Login successful: ${state.message}',
@@ -102,7 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   const SizedBox(height: 24),
-                  // LoginButtonWidget(fromKey: _fromKey),
                   ElevatedButton(
                     onPressed: () {
                       if (_fromKey.currentState!.validate()) {

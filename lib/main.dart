@@ -1,11 +1,8 @@
 import 'package:dummy/core/routes/app_routes.dart';
 import 'package:dummy/features/login/presentation/bloc/login_bloc.dart';
 import 'package:dummy/features/singup/presentation/bloc/singup_bloc.dart';
-import 'package:dummy/features/singup/presentation/pages/signup_page.dart';
 import 'package:dummy/features/splash/presentation/cubit/splash_cubit.dart';
-import 'package:dummy/features/splash/presentation/pages/splash_screen.dart';
 import 'package:dummy/features/users/presentation/cubit/users_cubit.dart';
-import 'package:dummy/features/users/presentation/pages/user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'injection_container.dart' as di;

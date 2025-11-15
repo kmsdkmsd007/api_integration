@@ -1,6 +1,7 @@
 import 'package:dummy/features/users/presentation/cubit/users_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class UserScreen extends StatelessWidget {
   const UserScreen({super.key});
@@ -8,14 +9,17 @@ class UserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 184, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 229, 209, 252),
       appBar: AppBar(
-        backgroundColor: Colors.teal,
+        backgroundColor: const Color.fromARGB(255, 159, 216, 243),
         title: Text("User Screen "),
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
-            onPressed: () => context.read<UsersCubit>().clearUserData(),
+            onPressed: () {
+              context.read<UsersCubit>().clearUserData();
+              context.go('/login');
+            },
           ),
         ],
       ),
@@ -44,10 +48,12 @@ class UserScreen extends StatelessWidget {
             );
           } else if (state is UserError) {
             return Center(child: Text('Error: ${state.message}'));
+          } else if (state is UserloggedOut) {
+            context.go('/login');
           }
           return Center(
             child: ElevatedButton(
-              onPressed: () => context.read<UsersCubit>().clearUserData(),
+              onPressed: () => context.read<UsersCubit>().fetchAllUsers(),
               child: const Text('Load Users'),
             ),
           );
