@@ -33,7 +33,14 @@ class EmailChanged extends LoginEvent {
   List<Object> get props => [email];
 }
 
-class LoginApi extends LoginEvent {}
+class LoginApiEvent extends LoginEvent {
+  final String email;
+  final String password;
+
+  const LoginApiEvent({required this.email, required this.password});
+  @override
+  List<Object> get props => [email, password];
+}
 
 class LoginLoading extends LoginEvent {}
 

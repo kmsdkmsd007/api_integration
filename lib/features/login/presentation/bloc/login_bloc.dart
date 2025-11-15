@@ -11,7 +11,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc({required this.loginUserCase}) : super(LoginState()) {
     on<EmailChanged>(_onEmailChanges);
     on<PasswordChanged>(_passwordChanged);
-    on<LoginApi>(_loginApi);
+    on<LoginApiEvent>(_loginApi);
   }
 
   void _onEmailChanges(EmailChanged event, Emitter<LoginState> emit) {
@@ -22,28 +22,23 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(state.copyWith(password: event.password));
   }
 
-  void _loginApi(LoginApi event, Emitter<LoginState> emit) async {
-    Map data = {"email": state.email, "password": state.password};
-    // Map data = {"email": "eve.holt@reqres.in", "password": "cityslicka"};
+  void _loginApi(LoginApiEvent event, Emitter<LoginState> emit) async {
     emit(
       state.copyWith(
-        loginStatus: LoginStatus.loading,
+        loginStatus: Status.loading,
         message: 'Submitting login request...',
       ),
     );
 
-    final result = await loginUserCase.login(state.email, state.password);
+    final result = await loginUserCase.login(event.email, event.password);
     result.fold(
       (failure) => emit(
-        state.copyWith(
-          message: failure.toString(),
-          loginStatus: LoginStatus.error,
-        ),
+        state.copyWith(message: failure.toString(), loginStatus: Status.error),
       ),
       (AuthTokenModel) => emit(
         state.copyWith(
           token: AuthTokenModel.token,
-          loginStatus: LoginStatus.success,
+          loginStatus: Status.success,
           message: 'Login successfully',
         ),
       ),

@@ -6,20 +6,20 @@ class LoginState extends Equatable {
     this.token = '',
     this.password = '',
     this.message = '',
-    this.loginStatus = LoginStatus.initial,
+    this.loginStatus = Status.initial,
   });
   final String email;
-  final String token;
-  final LoginStatus loginStatus;
+  final Status loginStatus;
   final String password;
   final String message;
+  final String token;
 
   LoginState copyWith({
     String? email,
     String? password,
     String? token,
     String? message,
-    LoginStatus? loginStatus,
+    Status? loginStatus,
   }) {
     return LoginState(
       email: email ?? this.email,

@@ -1,5 +1,10 @@
-import 'package:dummy/features/login/presentation/pages/login_screen.dart';
+import 'package:dummy/core/routes/app_routes.dart';
+import 'package:dummy/features/login/presentation/bloc/login_bloc.dart';
+import 'package:dummy/features/singup/presentation/bloc/singup_bloc.dart';
+import 'package:dummy/features/splash/presentation/cubit/splash_cubit.dart';
+import 'package:dummy/features/users/presentation/cubit/users_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
@@ -14,12 +19,20 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => di.sl<SingupBloc>()),
+        BlocProvider(create: (_) => di.sl<LoginBloc>()),
+        BlocProvider(create: (_) => di.sl<UsersCubit>()..fetchAllUsers()),
+        BlocProvider(
+          create: (_) => di.sl<SplashCubit>()..checkAuthentication(),
+        ),
+      ],
+
+      child: MaterialApp.router(
+        routerConfig: AppRoutes.router,
+        theme: ThemeData(primarySwatch: Colors.blue),
       ),
-      home: LoginScreen(),
     );
   }
 }
