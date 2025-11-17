@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:bloc/bloc.dart';
 import 'package:dummy/core/utils/enum.dart';
 import 'package:dummy/features/singup/domain/usecases/register_usecas.dart';

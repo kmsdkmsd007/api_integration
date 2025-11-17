@@ -11,7 +11,7 @@ class SplashScreen extends StatelessWidget {
     return BlocListener<SplashCubit, SplashState>(
       listener: (context, state) {
         if (state is AuthenticatedUser) {
-          context.go('/home'); // using go_router
+          context.go('/home');
         } else if (state is UnauthenticaterUser) {
           context.go('/login');
         } else if (state is LogoutUser) {
@@ -23,8 +23,8 @@ class SplashScreen extends StatelessWidget {
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color.fromARGB(255, 210, 174, 248),
-                Color.fromARGB(169, 48, 108, 211),
+                Color(0xFFF3E5F5), // Light purple
+                Color(0xFFE1BEE7), // Medium purple
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -34,9 +34,10 @@ class SplashScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // Animated Logo
                 TweenAnimationBuilder<double>(
                   tween: Tween(begin: 0.0, end: 1.0),
-                  duration: Duration(milliseconds: 900),
+                  duration: const Duration(milliseconds: 900),
                   curve: Curves.elasticOut,
                   builder: (context, scale, child) {
                     return Transform.scale(scale: scale, child: child);
@@ -49,9 +50,9 @@ class SplashScreen extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black26,
+                          color: Color(0xFF7B1FA2).withOpacity(0.3),
                           blurRadius: 20,
-                          offset: Offset(0, 8),
+                          offset: const Offset(0, 8),
                         ),
                       ],
                     ),
@@ -61,33 +62,39 @@ class SplashScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 32),
+                // Title
                 const Text(
-                  'Api Integration wiht TDD',
+                  'API Integration with TDD',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Color(0xFF7B1FA2),
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 12),
+                // Subtitle
                 Opacity(
-                  opacity: 0.9,
+                  opacity: 0.85,
                   child: const Text(
                     'Fast. Simple. Secure.',
                     style: TextStyle(
-                      color: Color.fromARGB(179, 255, 255, 255),
+                      color: Color(0xFF9C27B0),
                       fontSize: 14,
+                      letterSpacing: 0.5,
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 40),
+                // Loading Indicator
                 const SizedBox(
                   width: 36,
                   height: 36,
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Color(0xFF7B1FA2),
+                    ),
                     strokeWidth: 3,
                   ),
                 ),
