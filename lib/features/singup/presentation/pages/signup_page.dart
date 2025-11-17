@@ -11,24 +11,18 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPage extends State<SignupPage> {
-  //   final emailFoucsNode = FocusNode();
-  //   final passwordFocusNode = FocusNode();
-  //   final conrfrompasswordFocusNode = FocusNode();
   final _fromKey = GlobalKey<FormState>();
   final emailCtrl = TextEditingController(text: 'eve.holt@reqres.in');
   final passwordCtrl = TextEditingController(text: 'pistol');
   final conrfrompasswordCtrl = TextEditingController(text: 'pistol');
-  // late SingupBloc _singupBloc;
   @override
   void initState() {
     super.initState();
-    // _singupBloc = SingupBloc(registerUsecas: sl());
   }
 
   @override
   void dispose() {
     super.dispose();
-    // _singupBloc.close();
   }
 
   @override
